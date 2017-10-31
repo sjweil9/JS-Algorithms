@@ -76,6 +76,26 @@ class BST {
         return this.root == null?0:size;
     }
     */
+    isEmpty() {
+        return this.root === null?true:false;
+    }
+    contains(val) {
+        var ret = false;
+        var run = this.root;
+        while (run) {
+            if (run.val === val) {
+                ret = true;
+                break;
+            }
+            else if (run.val > val) {
+                run = run.left;
+            }
+            else {
+                run = run.right;
+            }
+        }
+        return ret;
+    }
 }
 
 class BTNode {
@@ -92,5 +112,7 @@ test_BT.add_node(4).add_node(3).add_node(5).add_node(3).add_node(12).add_node(8)
 console.log(test_BT.min());
 console.log(test_BT.max());
 console.log(test_BT.count());
+console.log(test_BT.contains(3));
+console.log(test_BT.contains(35));
 const test_BT2 = new BST();
 console.log(test_BT2.count());
