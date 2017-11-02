@@ -137,23 +137,30 @@ class BST {
         return ancestor;
     }
     add_sorted_array(array) {
+        if (array.length < 1) {
+            return null;
+        }
         // intended to BUILD a BST out of a sorted array - return false if BST already exists
         if (this.root) {
             console.log("This tree already exists.");
             return false;
         }
-        // below function is broken - stack call size exceeded
+        const start = 0;
+        const end = array.length - 1;
+        return build(array, start, end);
+
         function build(arr, start, end) {
             if (start > end) {
                 return null;
             }
-            var mid = Math.floor((start+(end-start))/2);
+            const mid = Math.floor((end + start) / 2);
             var node = new BTNode(arr[mid]);
-            node.left = build(arr, start, mid-1);
-            node.right = build(arr, mid+1, end);
+            if (start !== end) {
+                node.left = build(arr, start, mid-1);
+                node.right = build(arr, mid+1, end);
+            }
             return node;
         }
-        this.root = build(array, 0, array.length-1);
     }
 }
 
@@ -171,11 +178,12 @@ test_BT.add_node(4).add_node(3).add_node(5).add_node(3).add_node(12).add_node(8)
 console.log(test_BT.height());
 console.log(test_BT.common_ancestor(9, 12));
 
-/*
+
 const test_BT2 = new BST();
-test_BT2.add_sorted_array([0,0,1,2,3,4]);
+test_BT2.root = test_BT2.add_sorted_array([0,0,1,2,3,4]);
 console.log(test_BT2.height());
 
+/*
 console.log(test_BT.min());
 console.log(test_BT.max());
 console.log(test_BT.count());
