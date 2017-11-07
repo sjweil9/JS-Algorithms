@@ -227,6 +227,56 @@ class SLL {
         equal.back().next = greater.head;
         return this;
     }
+    bubble_sort() {
+        var end = null;
+        var run = this.head;
+        while (run && run.next && this.head !== end) {
+            if (run.next.val < run.val) {
+                let temp = run.val;
+                run.val = run.next.val;
+                run.next.val = temp;
+            }
+            if (run.next.next === end) {
+                end = run.next;
+                run = this.head;
+            }
+            else if (run.ext === end) {
+                break;
+            }
+            else {
+                run = run.next;
+            }
+        }
+        return this;
+    }
+    selection_sort() {
+        if (!this.head) {
+            console.log("This SLL is empty");
+            return this;
+        }
+        var start = this.head;
+        var run = this.head;
+        var min_node = start;
+        while (start.next) {
+            if (run.val < min_node.val) {
+                min_node = run;
+            }
+            if (run.next) {
+                run = run.next;
+            }
+            else {
+                if (min_node !== start) {
+                    let temp = start.val;
+                    start.val = min_node.val;
+                    min_node.val = temp;
+                }
+                start = start.next;
+                min_node = start;
+                run = start;
+            }
+        }
+        return this;
+    }
 }
 class SLQueue{
     constructor(){
@@ -330,6 +380,11 @@ class SLNode {
         this.next = null;
     }
 }
+
+const test_list = new SLL();
+test_list.pushArray([10,-3,5,2,6,7,-5]);
+console.log(test_list.display());
+console.log(test_list.selection_sort().display());
 
 // some SLL tests
 /* const test_list = new SLL();
