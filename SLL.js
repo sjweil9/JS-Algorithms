@@ -277,6 +277,35 @@ class SLL {
         }
         return this;
     }
+    insertion_sort() {
+        var end = this.head;
+        var run = this.head;
+        while (end.next) {
+            if (end.next.val > run.next.val) {
+                run = run.next;
+            }
+            else if (end === run && end.next.val > end.val) {
+                end = end.next;
+                run = this.head;
+            }
+            else {
+                let temp = end.next;
+                end.next = end.next.next;
+                if (temp.val < run.val) {
+                    let temp2 = this.head;
+                    this.head = temp;
+                    this.head.next = temp2;
+                }
+                else {
+                    let temp2 = run.next;
+                    run.next = temp;
+                    run.next.next = temp2;
+                }
+                run = this.head;
+            }
+        }
+        return this;
+    }
 }
 class SLQueue{
     constructor(){
@@ -384,7 +413,7 @@ class SLNode {
 const test_list = new SLL();
 test_list.pushArray([10,-3,5,2,6,7,-5]);
 console.log(test_list.display());
-console.log(test_list.selection_sort().display());
+console.log(test_list.insertion_sort().display());
 
 // some SLL tests
 /* const test_list = new SLL();
