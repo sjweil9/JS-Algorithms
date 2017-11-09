@@ -306,6 +306,36 @@ class SLL {
         }
         return this;
     }
+    merge_sort() {
+        if (!this.head || !this.head.next) {
+            return this;
+        }
+        var last_half = this.split();
+        if (this.head.next) {
+            this.merge_sort();
+        }
+        if (last_half.head.next) {
+            last_half.merge_sort();
+        }
+        this.head = combine(this, last_half).head;
+        return this;
+    }
+    split() {
+        var flip = false;
+        var run1 = this.head;
+        var run2 = this.head;
+        while (run2.next) {
+            if (flip) {
+                run1 = run1.next;
+            }
+            run2 = run2.next;
+            flip = !flip;
+        }
+        var new_list = new SLL();
+        new_list.head = run1.next;
+        run1.next = null;
+        return new_list;
+    }
 }
 class SLQueue{
     constructor(){
@@ -410,13 +440,70 @@ class SLNode {
     }
 }
 
-const test_list = new SLL();
-test_list.pushArray([10,-3,5,2,6,7,-5]);
+function combine(SLL_1, SLL_2) {
+    // takes two sorted SLLs (ascending order)
+    if (!SLL_1.head || !SLL_2.head) {
+        console.log("One or both of these lists is empty. Returning the non-empty list, or list 1.");
+        if (SLL_2.head) {
+            return SLL_2;
+        }
+        else {
+            return SLL_1;
+        }
+    }
+    // find list that starts with smaller number, set that as main runner, run_2 for other list
+    var run_main = SLL_1.head.val < SLL_2.head.val ? SLL_1.head : SLL_2.head;
+    var run_2 = run_main == SLL_1.head ? SLL_2.head : SLL_1.head;
+    // keep track of which list is the one you will be merging into and returning
+    var which_main = run_main == SLL_1.head ? SLL_1 : SLL_2;
+    while (run_2) {
+        // when second list is done, you are finished merging everything into main
+        if (run_main.next === null) {
+            // if at the end of main list, we can just add everything from second list
+            // disconnect run_2 from second list before adding to avoid circular reference
+            run_main.next = run_2;
+            break;
+        }
+        else if (run_2.val <= run_main.next.val) {
+            // if secondary list runner value is between main runner and the next node in main, insert it
+            // store temp for the primary list
+            let temp = run_main.next;
+            let temp2 = run_2.next;
+            // disconnect run_2 from second list before adding to avoid circular reference
+            run_2.next = null;
+            run_main.next = run_2;
+            // before linking that merged node to the temp, first move forward runner
+            // to save reference to the second list
+            run_2 = temp2;
+            // now connect merged node to temp, and move forward that runner
+            run_main.next.next = temp;
+        }
+        else {
+            // otherwise, advance run_main to find a node smaller than the one you'd like to merge
+            run_main = run_main.next;
+        }
+    }
+    return which_main;
+}
+
+var test_list = new SLL();
+test_list.pushArray([1,3,3,4,5,6,8,9]);
+var test_list_2 = new SLL();
+test_list_2.pushArray([2,2,3,4,5,6,7,12,14,15,17]);
+
+console.log(combine(test_list, test_list_2).display());
+
+var list_3 = new SLL();
+list_3.pushArray([5,2,3,6,8,1,4,10,7]);
+console.log(list_3.merge_sort().display());
+
+
+/*
 console.log(test_list.display());
 console.log(test_list.insertion_sort().display());
 
 // some SLL tests
-/* const test_list = new SLL();
+const test_list = new SLL();
 test_list.add_front(4);
 console.log(test_list.front());
 test_list.add_front('A');
