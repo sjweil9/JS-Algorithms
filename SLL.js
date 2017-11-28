@@ -336,6 +336,71 @@ class SLL {
         run1.next = null;
         return new_list;
     }
+    returnAsArray() {
+        var ret = [];
+        var run = this.head;
+        while (run) {
+            ret.push(run.val);
+            run = run.next;
+        }
+        return ret;
+    }
+    reverse() {
+        var arr = this.returnAsArray();
+        var run = this.head;
+        while (run) {
+            run.val = arr.pop();
+            run = run.next;
+        }
+        return this;
+    }
+    isPalindrome() {
+        var ret = true;
+        var arr = this.returnAsArray();
+        var half = Math.floor(arr.length/2);
+        var run = this.head;
+        for (let i=0; i !== half; i++, run=run.next) {
+            if (run.val !== arr.pop()) {
+                ret = false;
+                break;
+            }
+        }
+        return ret;
+    }
+    kthLastNode(k) {
+        var to_run = this.length() - k;
+        if (to_run < 0) {
+            console.log("This SLL is too short.");
+            return null;
+        }
+        else if (k < 1) {
+            console.log("WTF mate?!");
+            return null;
+        }
+        var count = 0,
+            run = this.head;
+        while (count !== to_run) {
+            run = run.next;
+            count++;
+        }
+        return run.val;
+    }
+    flatten() {
+        var run = this.head;
+        while (run) {
+            if (run.child) {
+                let temp = run.next;
+                let run2 = run.child.head;
+                while (run2.next) {
+                    run2 = run2.next;
+                }
+                run.next = run.child.head;
+                run2.next = temp;
+            }
+            run = run.next;
+        }
+        return this;
+    }
 }
 class SLQueue{
     constructor(){
@@ -416,6 +481,21 @@ class SLQueue{
         }
         return val;
     }
+    display(){
+        if (!this.head){
+            return null;
+        }
+        var ret = "";
+        var cur = this.head;
+        while (cur){
+            ret += cur.val;
+            if (cur.next){
+                ret += " , ";
+            }
+            cur = cur.next;
+        }
+        return ret;
+    }
 }
 
 function compareQueues(Q1, Q2){
@@ -437,6 +517,7 @@ class SLNode {
     constructor(value) {
         this.val = value;
         this.next = null;
+        this.child = null;
     }
 }
 
@@ -486,19 +567,63 @@ function combine(SLL_1, SLL_2) {
     return which_main;
 }
 
+function flatten_SLQ(SLQ) {
+    var run = SLQ.head;
+    while (run) {
+        if (run.child) {
+            flatten_SLQ(run.child);
+            let temp = run.next;
+            run.next = run.child.head;
+            run.child.tail.next = temp;
+            run = temp;
+        }
+        else {
+            run = run.next;
+        }
+    }
+    return SLQ;
+}
+
+function unflatten_SLQ(SLQ) {
+    var run = SLQ.head;
+    while (run) {
+        if (run.child) {
+            unflatten_SLQ(run.child);
+            run.next = run.child.tail.next;
+            run.child.tail.next = null;
+        }
+        run = run.next;
+    }
+    return SLQ;
+}
+
 var test_list = new SLL();
 test_list.pushArray([1,3,3,4,5,6,8,9]);
+
 var test_list_2 = new SLL();
 test_list_2.pushArray([2,2,3,4,5,6,7,12,14,15,17]);
 
-console.log(combine(test_list, test_list_2).display());
+test_list.head.next.next.child = test_list_2;
+console.log(test_list.display());
+console.log(test_list.flatten().display());
 
-var list_3 = new SLL();
+var test_queue = new SLQueue();
+test_queue.pushArray([1,2,3,7,5,6]);
+var test_queue_2 = new SLQueue();
+test_queue_2.pushArray([1,2,3,7,5,6]);
+
+test_queue.head.next.next.child = test_queue_2;
+
+console.log(test_queue.display());
+console.log(flatten_SLQ(test_queue).display());
+console.log(unflatten_SLQ(test_queue).display());
+
+// console.log(combine(test_list, test_list_2).display());
+
+/* var list_3 = new SLL();
 list_3.pushArray([5,2,3,6,8,1,4,10,7]);
 console.log(list_3.merge_sort().display());
 
-
-/*
 console.log(test_list.display());
 console.log(test_list.insertion_sort().display());
 
