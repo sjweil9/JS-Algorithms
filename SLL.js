@@ -401,6 +401,26 @@ class SLL {
         }
         return this;
     }
+    swapPairs() {
+        if (!this.head || !this.head.next) {
+            return this;
+        }
+        let temp = this.head;
+        let temp2 = this.head.next.next;
+        this.head = this.head.next;
+        temp.next = temp2;
+        this.head.next = temp;
+        var run = this.head.next;
+        while (run.next && run.next.next) {
+            let temp = run.next;
+            let temp2 = run.next.next.next;
+            run.next = run.next.next;
+            temp.next = temp2;
+            run.next.next = temp;
+            run = temp;
+        }
+        return this;
+    }
 }
 class SLQueue{
     constructor(){
@@ -603,6 +623,10 @@ test_list.pushArray([1,3,3,4,5,6,8,9]);
 var test_list_2 = new SLL();
 test_list_2.pushArray([2,2,3,4,5,6,7,12,14,15,17]);
 
+console.log(test_list.swapPairs().display());
+console.log(test_list_2.swapPairs().display());
+
+/*
 test_list.head.next.next.child = test_list_2;
 console.log(test_list.display());
 console.log(test_list.flatten().display());
@@ -618,9 +642,9 @@ console.log(test_queue.display());
 console.log(flatten_SLQ(test_queue).display());
 console.log(unflatten_SLQ(test_queue).display());
 
-// console.log(combine(test_list, test_list_2).display());
+console.log(combine(test_list, test_list_2).display());
 
-/* var list_3 = new SLL();
+var list_3 = new SLL();
 list_3.pushArray([5,2,3,6,8,1,4,10,7]);
 console.log(list_3.merge_sort().display());
 
