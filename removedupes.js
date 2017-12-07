@@ -1,4 +1,4 @@
-function remove_dupes(arr){
+module.exports = function(arr){
     var len = 0;
     var temp = {};
     for (var i=0; i < arr.length; i++) {
@@ -12,5 +12,7 @@ function remove_dupes(arr){
     return arr;
 }
 
+/*
 console.log(remove_dupes([1,2,1,3,2,4,5]));
 console.log(remove_dupes([1,2,1,3,4,1,2]));
+*/
