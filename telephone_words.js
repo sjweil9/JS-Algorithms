@@ -18,8 +18,7 @@ function telephoneWords(num, map, idx=0, str='', arr=[]) {
     else {
         var letters = map[num[idx]];
         for (var i=0, len = letters.length; i !== len; i++) {
-            let next_str = str + letters[i];
-            telephoneWords(num, map, idx+1, next_str, arr);
+            telephoneWords(num, map, idx+1, str + letters[i], arr);
         }
     }
     return arr;
