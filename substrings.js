@@ -16,6 +16,16 @@ function subs2(str, arr=['']) {
     return arr;
 }
 
+function subs3(str, arr=[]) {
+    var root = new Node(str[0]);
+    build_tree2(root, str, 1);
+    traverse_tree2(root, arr);
+    for (var i=0, len=root.children.length; i !== len; i++) {
+        traverse_tree2(root.children[i], arr);
+    }
+    return arr;
+}
+
 function build_tree2(node, str, idx) {
     for (var i=idx, len=str.length; i <= len; i++) {
         if (i === len) {
@@ -23,8 +33,6 @@ function build_tree2(node, str, idx) {
         }
         else {
             node.children.push(new Node(str[i]));
-        }
-        if ((i) < len) {
             build_tree2(node.children[node.children.length-1], str, i+1);
         }
     }
@@ -89,18 +97,32 @@ function get_dupes(arr) {
 }
 
 var t0 = now();
-var subs = substrings('abcde');
+var subs = substrings('abcdefghijklmnop');
 var t1 = now();
 console.log(subs);
-console.log(get_dupes(subs));
+console.log(subs.length);
+// console.log(get_dupes(subs));
 console.log("Version 1 took " + (t1 - t0) + " milliseconds.");
 
+// v1 cant handle past 19 characters (50 seconds)
+
 t0 = now();
-var other_subs = subs2('abcde');
+var other_subs = subs2('abcdefghijklmnop');
 t1 = now();
 console.log(other_subs);
-console.log(get_dupes(other_subs));
+console.log(other_subs.length);
+// console.log(get_dupes(other_subs));
 console.log("Version 2 took " + (t1 - t0) + " milliseconds.");
 
 // on strings of 4 characters or less, version 1 is marginally faster
-// when strings get longer, version 2 is superior, again marginally
+// when strings get longer, version 2 becomes vastly superior
+
+t0 = now();
+var third_subs = subs3('abcdefghijklmnop');
+t1 = now();
+console.log(third_subs);
+console.log(third_subs.length);
+// console.log(get_dupes(third_subs));
+console.log("Version 3 took " + (t1 - t0) + " milliseconds.");
+
+// version three uses caching, becomes quickly superior to v2
