@@ -114,6 +114,8 @@ console.log(other_subs.length);
 // console.log(get_dupes(other_subs));
 console.log("Version 2 took " + (t1 - t0) + " milliseconds.");
 
+
+
 // on strings of 4 characters or less, version 1 is marginally faster
 // when strings get longer, version 2 becomes vastly superior
 
@@ -126,3 +128,5 @@ console.log(third_subs.length);
 console.log("Version 3 took " + (t1 - t0) + " milliseconds.");
 
 // version three uses caching, becomes quickly superior to v2
+// overflows heap at 23 characters on MacOS High Sierra
+// but does 22 characters in just under 4 seconds
