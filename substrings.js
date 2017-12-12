@@ -97,7 +97,7 @@ function get_dupes(arr) {
 }
 
 var t0 = now();
-var subs = substrings('abcdefghijklmnop');
+var subs = substrings('a');
 var t1 = now();
 console.log(subs);
 console.log(subs.length);
@@ -107,7 +107,7 @@ console.log("Version 1 took " + (t1 - t0) + " milliseconds.");
 // v1 cant handle past 19 characters (50 seconds)
 
 t0 = now();
-var other_subs = subs2('abcdefghijklmnop');
+var other_subs = subs2('abcdefghijklmnopqrstuv');
 t1 = now();
 console.log(other_subs);
 console.log(other_subs.length);
@@ -120,7 +120,7 @@ console.log("Version 2 took " + (t1 - t0) + " milliseconds.");
 // when strings get longer, version 2 becomes vastly superior
 
 t0 = now();
-var third_subs = subs3('abcdefghijklmnop');
+var third_subs = subs3('abcdefghijklmnopqrstuv');
 t1 = now();
 console.log(third_subs);
 console.log(third_subs.length);
