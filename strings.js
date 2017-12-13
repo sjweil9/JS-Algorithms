@@ -1,3 +1,5 @@
+var now = require("performance-now");
+
 function stringToWordArray(string) {
     var words = [];
     var current_word = '';
@@ -34,6 +36,7 @@ function reverseWords(string) {
             cur_word += string[i];
             if (i+1 === len && cur_word !== "") {
                 cur_word = capitalize(cur_word);
+                reversed = cur_word + " " + reversed;
             }
         }
         else {
@@ -78,4 +81,61 @@ function capitalize(word) {
     return first.toUpperCase() + rest;
 }
 
+function rotate(string, num) {
+    if (num === 0) {
+        return string;
+    }
+    let rest = "";
+    for (var i=0, len=string.length-1; i !== len; i++) {
+        rest += string[i];
+    }
+    return rotate(string[len]+rest, num-1);
+}
+
+function dedupe(string, memo={}, idx=string.length-1) {
+    if (idx === -1) {
+        return string;
+    }
+    else if (!memo[string[idx]]) {
+        memo[string[idx]] = true;
+        return dedupe(string, memo, idx-1);
+    }
+    else {
+        let fixed = "";
+        for (let pos in string) {
+            if (pos != idx) {
+                fixed += string[pos];
+            }
+        }
+        return dedupe(fixed, memo, idx-1);
+    }
+}
+
+function dedupe2(string, memo={}, idx=string.length-1, fixed="") {
+    // this is strictly better than first dedupe, also uses slightly less memory
+    if (idx === -1) {
+        return fixed;
+    }
+    else if (!memo[string[idx]]) {
+        memo[string[idx]] = true;
+        return dedupe2(string, memo, idx-1, string[idx]+fixed);
+    }
+    else {
+        return dedupe2(string, memo, idx-1, fixed);
+    }
+}
+
 console.log(reverseWords("Life's not a drill, go for it!"));
+console.log(reverseWords("Hey this is a test"));
+
+console.log(rotate("Boris Godunov", 5));
+
+var t0 = now();
+console.log(dedupe("Snaps! crackles! pops!"));
+var t1 = now();
+console.log("Version 1 took " + (t1 - t0) + " milliseconds.");
+
+t0 = now();
+console.log(dedupe2("Snaps! crackles! pops!"));
+t1 = now();
+console.log("Version 2 took " + (t1 - t0) + " milliseconds.");
