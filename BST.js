@@ -142,6 +142,7 @@ class BST {
             console.log("This tree already exists.");
             return false;
         }
+        this.size += array.length;
         const start = 0;
         const end = array.length - 1;
         return build(array, start, end);
@@ -278,12 +279,78 @@ class BTNode {
     }
 }
 
+function isFull(node) {
+    if (!node.right && !node.left) {
+        return true;
+    }
+    else if (node.right && node.left) {
+        let left = isFull(node.left);
+        let right = isFull(node.right);
+        return left && right;
+    }
+    else {
+        return false;
+    }
+}
+
+function smallest_diff(BST) {
+    var root = BST.root;
+    if (!root || (!root.left && !root.right)) {
+        return null;
+    }
+    var diff = root.left ? root.val - root.left.val : root.val - root.right.val;
+    var arr = [];
+    function traverse(node) {
+        if (node.left) {
+            traverse(node.left);
+        }
+        arr.push(node.val);
+        let end = arr.length - 1;
+        if (end > 0) {
+            if (arr[end] - arr[end-1] < diff) {
+                diff = arr[end] - arr[end-1];
+            }
+        }
+        if (node.right) {
+            traverse(node.right);
+        }
+    }
+    traverse(root);
+    return diff;
+}
+
+function BSTtoArray(BST) {
+    var arr = [];
+    function traverse_levels(node, depth=0) {
+        if (arr.length > depth) {
+            arr[depth].push(node.val);
+        }
+        else {
+            arr[depth] = [node.val];
+        }
+        if (node.left) {
+            traverse_levels(node.left, depth + 1);
+        }
+        if (node.right) {
+            traverse_levels(node.right, depth + 1);
+        }
+    }
+    traverse_levels(BST.root);
+    return arr;
+}
+
+
 const test = new BST();
 test.add_array([25, 15, 50, 10, 22, 35, 70, 4, 12, 18, 24, 31, 44, 66, 90]);
 console.log(test.pre_order());
 console.log(test.post_order());
 console.log(test.in_order());
 
+console.log(isFull(test.root));
+
+console.log(smallest_diff(test));
+
+console.log(BSTtoArray(test));
 
 
 

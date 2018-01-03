@@ -3,18 +3,17 @@ var now = require("performance-now");
 function stringToWordArray(string) {
     var words = [];
     var current_word = '';
-    for (let char of string) {
-        if (char.match(/[a-zA-Z0-9']/)) {
-            current_word += char;
+    for (var i=0, len=string.length; i !== len; i++) {
+        if (string[i].match(/[a-zA-Z0-9]/) || ( (i+1) !== len && string[i].match(/[\s]/) === null && string[i+1].match(/[a-zA-Z0-9]/)) ) {
+            current_word += string[i];
         }
-        // could re-write to have it check if symbol is followed by whitespace or a char
         else {
             if (current_word !== '') {
                 words.push(current_word);
                 current_word = '';
             }
-            if (char !== ' ' && char !== '\n' && char !== '\t') {
-                words.push(char);
+            if (string[i].match(/[\s]/) === null) {
+                words.push(string[i]);
             }
         }
     }
@@ -125,6 +124,43 @@ function dedupe2(string, memo={}, idx=string.length-1, fixed="") {
     }
 }
 
+function censor(string, words) {
+    split = stringToWordArray(string);
+    joined = "";
+    for (let idx=0, len=split.length; idx !== len; idx++) {
+        joined += check(split[idx], words);
+        if (idx + 1 !== len && split[idx+1][0].match(/[a-zA-Z0-9]/)) {
+            joined += " ";
+        }
+    }
+    return joined;
+}
+
+function check(word, words, start=0) {
+    let len = word.length;
+    if (start === len) {
+        return word;
+    }
+    let cleansed = "";
+    for (let i=start; i !== len; i++) {
+        cleansed += word[i];
+        if (words.indexOf(cleansed) !== -1) {
+            cleansed = "";
+            for (var j=0; j !== start; j++) {
+                cleansed += word[j];
+            }
+            for (j=-1; j !== (i-start); j++) {
+                cleansed += "x";
+            }
+            for (j=i+1; j !== len; j++) {
+                cleansed += word[j];
+            }
+            return check(cleansed, words, start+1);
+        }
+    }
+    return check(word, words, start+1);
+}
+
 console.log(reverseWords("Life's not a drill, go for it!"));
 console.log(reverseWords("Hey this is a test"));
 
@@ -139,3 +175,5 @@ t0 = now();
 console.log(dedupe2("Snaps! crackles! pops!"));
 t1 = now();
 console.log("Version 2 took " + (t1 - t0) + " milliseconds.");
+
+console.log(censor("Snap crackle pop nincompoopcracker!", ["crack", "poop"]));
