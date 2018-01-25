@@ -31,16 +31,26 @@ def go_left(left, right, l, r)
 end
 
 test = []
-10000.times { test << Random.rand(100) }
+1000.times { test << Random.rand(1000) }
 puts Benchmark.measure { merge_sort(test) }
 
 def bubble_sort(array)
   (array.size - 1).downto(1) do |i|
+    no_swaps = true
     0.upto(i - 1) do |j|
-      array[j], array[j + 1] = array[j + 1], array[j] if array[j] > array[j + 1]
+      if array[j] > array[j + 1]
+        array[j], array[j + 1] = array[j + 1], array[j]
+        no_swaps = false
+      end
     end
+    break if no_swaps
   end
   array
 end
 
 puts Benchmark.measure { bubble_sort(test) }
+
+test2 = []
+1.upto(1000) { |i| test2 << i }
+
+puts Benchmark.measure { bubble_sort(test2) }
