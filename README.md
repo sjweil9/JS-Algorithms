@@ -1,6 +1,6 @@
 # JS-Algorithms
 
-This is a collection of algorithms, written primarily in Javascript, with some in Python. 
+This is a collection of algorithms, written primarily in Javascript, now with some in Python in Ruby. 
 
 This collection includes:
 - Data Structures - such as Linked Lists, Heaps, Binary Search Trees, Queues/Stacks, and Hash Tables
